@@ -1,10 +1,6 @@
 package ru.mityushin.jobfinder.server.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -12,9 +8,10 @@ import java.util.UUID;
 @Data @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@org.hibernate.annotations.Entity
+@Setter
+@Entity
 @Table(name = "PUBLICATION")
-public class Publication implements Entity {
+public class Publication {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
@@ -22,17 +19,6 @@ public class Publication implements Entity {
 
     @Column(name = "UUID", nullable = false, unique = true)
     private UUID uuid;
-
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "AUTHOR_ID")
-    private UserInfo author;
-
-    private Organization organization;
-
-    @GeneratedValue
-    @Column(name = "URL")
-    private String url;
 
     @Column(name = "TITLE", length = 50, nullable = false)
     private String title;

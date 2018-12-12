@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class JobfinderServerApplication {
+public class JobFinderServerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(JobfinderServerApplication.class, args);
+        SpringApplication.run(JobFinderServerApplication.class, args);
     }
 }

@@ -3,14 +3,32 @@ package ru.mityushin.jobfinder.server.util.mapper;
 import ru.mityushin.jobfinder.server.model.Publication;
 import ru.mityushin.jobfinder.server.util.dto.PublicationDTO;
 
+import javax.validation.constraints.NotNull;
+
 public class PublicationMapper {
 
+    @NotNull
     public static Publication map(PublicationDTO publicationDTO) {
-        return null;
+        return Publication.builder()
+                .uuid(publicationDTO.getUuid())
+                .title(publicationDTO.getTitle())
+                .description(publicationDTO.getDescription())
+                .content(publicationDTO.getContent())
+                .visible(publicationDTO.getVisible())
+                .deleted(publicationDTO.getDeleted())
+                .build();
     }
 
+    @NotNull
     public static PublicationDTO map(Publication publication) {
-        return null;
+        return PublicationDTO.builder()
+                .uuid(publication.getUuid())
+                .title(publication.getTitle())
+                .description(publication.getDescription())
+                .content(publication.getContent())
+                .visible(publication.getVisible())
+                .deleted(publication.getDeleted())
+                .build();
     }
 
 }

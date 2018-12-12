@@ -1,109 +1,57 @@
 package ru.mityushin.jobfinder.server.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.mityushin.jobfinder.server.service.http.HttpService;
 import ru.mityushin.jobfinder.server.service.publication.PublicationService;
 import ru.mityushin.jobfinder.server.util.dto.PublicationDTO;
-import ru.mityushin.jobfinder.server.util.exception.data.DataCreateException;
-import ru.mityushin.jobfinder.server.util.exception.data.DataDeleteException;
-import ru.mityushin.jobfinder.server.util.exception.data.DataUpdateException;
 
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 
-@CrossOrigin(value = "http://localhost:4200")
 @RestController
 @RequestMapping(value = "/api/publications")
+@AllArgsConstructor
 public class PublicationController {
 
     private PublicationService publicationService;
-    private HttpService httpService;
 
-    public PublicationController(PublicationService publicationService, HttpService httpService) {
-        this.publicationService = publicationService;
-        this.httpService = httpService;
-    }
-
-    @GetMapping()
+    @GetMapping
     @ResponseBody
     public ResponseEntity<List<PublicationDTO>> getPublications() {
         return new ResponseEntity<>(publicationService.findAll(), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/deleted")
+    @PostMapping
     @ResponseBody
-    public ResponseEntity<List<PublicationDTO>> getDeletedPublications() {
-        return new ResponseEntity<>(publicationService.findAllDeleted(), HttpStatus.OK);
+    public ResponseEntity<?> createPublication(@Valid @RequestBody PublicationDTO publicationDTO) {
+        return new ResponseEntity<>(publicationService.create(publicationDTO), HttpStatus.CREATED);
     }
 
-    @GetMapping(value = "/{url}")
+    @GetMapping(value = "/{uuid}")
     @ResponseBody
-    public ResponseEntity<PublicationDTO> getPublication(@PathVariable("url") String url) {
+    public ResponseEntity<PublicationDTO> getPublication(@PathVariable("uuid") UUID uuid) {
 
-        PublicationDTO publication = publicationService.findByUrl(url);
-
+        PublicationDTO publication = publicationService.find(uuid);
         if (publication == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
         return new ResponseEntity<>(publication, HttpStatus.OK);
     }
 
-    @PostMapping
+    @PutMapping(value = "/{uuid}")
     @ResponseBody
-    public ResponseEntity<?> createPublication(@RequestBody Map<String, String> body) {
-
-        PublicationDTO publication = PublicationDTO.builder()
-                .title(body.getOrDefault("title", null))
-                .description(body.getOrDefault("description", null))
-                .content(body.getOrDefault("content", null))
-                .build();
-
-        try {
-            publication = publicationService.create(publication);
-        } catch (DataCreateException e) {
-            return new ResponseEntity<>(httpService.createMessage(e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(publication, HttpStatus.CREATED);
+    public ResponseEntity<?> updatePublication(@PathVariable("uuid") UUID uuid,
+                                               @Valid @RequestBody PublicationDTO publicationDTO) {
+        return new ResponseEntity<>(publicationService.update(uuid, publicationDTO), HttpStatus.OK);
     }
 
-    @PutMapping(value = "/{url}")
+    @DeleteMapping(value = "/{uuid}")
     @ResponseBody
-    public ResponseEntity<?> updatePublication(@RequestBody Map<String, String> body, @PathVariable("url") String url) {
-
-        PublicationDTO publication = PublicationDTO.builder()
-                .uuid(body.getOrDefault("uuid", null))
-                .url(url)
-                .title(body.getOrDefault("title", null))
-                .description(body.getOrDefault("description", null))
-                .content(body.getOrDefault("content", null))
-                .visible(body.getOrDefault("visible", null))
-                .build();
-
-        try {
-            publication = publicationService.update(publication);
-        } catch (DataUpdateException e) {
-            return new ResponseEntity<>(httpService.createMessage(e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
-
-        return new ResponseEntity<>(publication, HttpStatus.OK);
-    }
-
-    @DeleteMapping(value = "/{url}")
-    @ResponseBody
-    public ResponseEntity<?> deletePublication(@PathVariable("url") String url) {
-        PublicationDTO publication = PublicationDTO.builder()
-                .url(url)
-                .build();
-        try {
-            publication = publicationService.delete(publication);
-        } catch (DataDeleteException e) {
-            return new ResponseEntity<>(httpService.createMessage(e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
-
-        return new ResponseEntity<>(publication, HttpStatus.OK);
+    public ResponseEntity<?> deletePublication(@PathVariable("uuid") UUID uuid) {
+        return new ResponseEntity<>(publicationService.delete(uuid), HttpStatus.OK);
     }
 
 }
