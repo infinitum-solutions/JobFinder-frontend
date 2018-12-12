@@ -1,4 +1,4 @@
-package ru.mityushin.researchwork.server;
+package ru.mityushin.jobfinder.server;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ResearchServerApplicationTests {
+public class JobFinderServerApplicationTests {
 
     @Test
     public void contextLoads() {
