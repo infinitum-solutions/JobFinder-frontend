@@ -27,6 +27,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        //todo: remove
         if (username.equals("test")) {
             return new ExtendedUserDetails(
                     Person.builder()

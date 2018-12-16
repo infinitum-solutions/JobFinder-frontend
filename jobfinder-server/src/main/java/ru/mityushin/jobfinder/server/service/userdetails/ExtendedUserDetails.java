@@ -12,10 +12,11 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ExtendedUserDetails implements UserDetails, Identifiable<UUID> {
 
-    Person person;
+    private Person person;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        //todo: fix it
         return null;
     }
 
