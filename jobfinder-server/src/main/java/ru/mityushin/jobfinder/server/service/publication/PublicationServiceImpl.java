@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.mityushin.jobfinder.server.model.Publication;
 import ru.mityushin.jobfinder.server.repo.PublicationRepository;
+import ru.mityushin.jobfinder.server.util.JobFinderUtils;
 import ru.mityushin.jobfinder.server.util.dto.PublicationDTO;
 import ru.mityushin.jobfinder.server.util.exception.data.AlreadyExistsDataException;
 import ru.mityushin.jobfinder.server.util.exception.data.NotFoundDataException;
@@ -42,6 +43,7 @@ public class PublicationServiceImpl implements PublicationService {
     public PublicationDTO create(PublicationDTO publicationDTO) throws AlreadyExistsDataException, RequiredParametersDataException {
         Publication publication = PublicationMapper.map(publicationDTO);
         publication.setUuid(UUID.randomUUID());
+        publication.setAuthorUuid(JobFinderUtils.getPrincipalIdentifier());
         Publication saved = publicationRepository.save(publication);
         return PublicationMapper.map(saved);
     }
@@ -57,7 +59,8 @@ public class PublicationServiceImpl implements PublicationService {
         Publication publication = PublicationMapper.map(publicationDTO);
         publication.setId(publicationFromRepo.getId());
         publication.setUuid(uuid);
-        publication.setDeleted(false);
+        publication.setAuthorUuid(publicationFromRepo.getAuthorUuid());
+        publication.setDeleted(Boolean.FALSE);
 
         Publication saved = publicationRepository.save(publication);
         return PublicationMapper.map(saved);
@@ -70,7 +73,7 @@ public class PublicationServiceImpl implements PublicationService {
                 || publication.getDeleted()) {
             throw new NotFoundDataException();
         }
-        publication.setDeleted(true);
+        publication.setDeleted(Boolean.TRUE);
         return PublicationMapper.map(publicationRepository.save(publication));
     }
 }

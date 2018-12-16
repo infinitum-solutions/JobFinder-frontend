@@ -9,9 +9,9 @@ import java.util.UUID;
 public class PublicationDTO {
 
     private UUID uuid;
+    private UUID authorUuid;
     private String title;
     private String description;
     private String content;
     private Boolean visible;
-    private Boolean deleted;
 }
