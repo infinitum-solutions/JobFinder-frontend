@@ -15,10 +15,10 @@ public class JobFinderUtils {
             if (identifier instanceof UUID) {
                 return (UUID) identifier;
             } else {
-                throw new UnsupportedIdentifierException();
+                throw new UnsupportedIdentifierException(identifier.getClass().toString());
             }
         } else {
-            throw new UnsupportedPrincipalException();
+            throw new UnsupportedPrincipalException(principal.getClass().toString());
         }
     }
 }
