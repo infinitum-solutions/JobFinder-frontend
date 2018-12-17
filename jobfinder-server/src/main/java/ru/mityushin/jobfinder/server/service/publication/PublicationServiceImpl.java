@@ -42,8 +42,9 @@ public class PublicationServiceImpl implements PublicationService {
         Publication publication = PublicationMapper.map(publicationDTO);
         publication.setUuid(UUID.randomUUID());
         publication.setAuthorUuid(JobFinderUtils.getPrincipalIdentifier());
-        Publication saved = publicationRepository.save(publication);
-        return PublicationMapper.map(saved);
+        publication.setVisible(Boolean.TRUE);
+        publication.setDeleted(Boolean.FALSE);
+        return PublicationMapper.map(publicationRepository.save(publication));
     }
 
     @Override
