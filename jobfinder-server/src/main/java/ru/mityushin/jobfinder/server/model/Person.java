@@ -4,9 +4,12 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
-@Data @Builder
+@Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
@@ -14,7 +17,8 @@ import java.util.UUID;
 @Table(name = "PERSON")
 public class Person {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
     private Long id;
 
@@ -26,6 +30,9 @@ public class Person {
 
     @Column(name = "PASSWORD", nullable = false)
     private String password;
+
+    @ManyToMany(mappedBy = "subscribers")
+    private Set<Organization> organizations;
 
     @Column(name = "DELETED", nullable = false)
     private Boolean deleted;
@@ -41,4 +48,17 @@ public class Person {
 
     @Column(name = "CREDENTIALS_EXPIRE")
     private ZonedDateTime credentialsExpire;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Person)) return false;
+        Person person = (Person) o;
+        return Objects.equals(uuid, person.uuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(uuid);
+    }
 }

@@ -12,6 +12,7 @@ import ru.mityushin.jobfinder.server.util.exception.data.DataNotFoundException;
 import ru.mityushin.jobfinder.server.util.exception.data.MissingRequiredParametersException;
 import ru.mityushin.jobfinder.server.util.mapper.PersonMapper;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -55,6 +56,7 @@ public class PersonServiceImpl implements PersonService {
         Person person = PersonMapper.map(personDTO);
         person.setUuid(UUID.randomUUID());
         person.setPassword(encoder.encode(personDTO.getPassword()));
+        person.setOrganizations(new HashSet<>());
         person.setDeleted(Boolean.FALSE);
         person.setLocked(Boolean.FALSE);
         person.setEnabled(Boolean.TRUE);
