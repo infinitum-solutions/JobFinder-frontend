@@ -33,12 +33,7 @@ public class PublicationController {
     @GetMapping(value = "/{uuid}")
     @ResponseBody
     public ResponseEntity<PublicationDTO> getPublication(@PathVariable("uuid") UUID uuid) {
-
-        PublicationDTO publication = publicationService.find(uuid);
-        if (publication == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(publication, HttpStatus.OK);
+        return new ResponseEntity<>(publicationService.find(uuid), HttpStatus.OK);
     }
 
     @PutMapping(value = "/{uuid}")
@@ -53,5 +48,4 @@ public class PublicationController {
     public ResponseEntity<?> deletePublication(@PathVariable("uuid") UUID uuid) {
         return new ResponseEntity<>(publicationService.delete(uuid), HttpStatus.OK);
     }
-
 }
