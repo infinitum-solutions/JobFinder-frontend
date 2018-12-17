@@ -6,9 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mityushin.jobfinder.server.service.organization.OrganizationService;
 import ru.mityushin.jobfinder.server.util.dto.OrganizationDTO;
+import ru.mityushin.jobfinder.server.util.dto.PersonDTO;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @RestController
@@ -46,6 +48,12 @@ public class OrganizationController {
     @ResponseBody
     public ResponseEntity<OrganizationDTO> deletePublication(@PathVariable("uuid") UUID uuid) {
         return new ResponseEntity<>(organizationService.delete(uuid), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/{uuid}/subscribers")
+    @ResponseBody
+    public ResponseEntity<Set<PersonDTO>> getSubscribers(@PathVariable("uuid") UUID uuid) {
+        return new ResponseEntity<>(organizationService.getSubscribers(uuid), HttpStatus.OK);
     }
 
     @PostMapping(value = "/{uuid}/subscribe")
