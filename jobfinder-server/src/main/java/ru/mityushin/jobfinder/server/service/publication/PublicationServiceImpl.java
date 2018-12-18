@@ -6,6 +6,7 @@ import ru.mityushin.jobfinder.server.model.Publication;
 import ru.mityushin.jobfinder.server.repo.PublicationRepository;
 import ru.mityushin.jobfinder.server.util.JobFinderUtils;
 import ru.mityushin.jobfinder.server.util.dto.PublicationDTO;
+import ru.mityushin.jobfinder.server.util.exception.PermissionDeniedException;
 import ru.mityushin.jobfinder.server.util.exception.data.DataNotFoundException;
 import ru.mityushin.jobfinder.server.util.mapper.PublicationMapper;
 
@@ -49,12 +50,8 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Override
     public PublicationDTO update(UUID uuid, PublicationDTO publicationDTO) {
-
         Publication publicationFromRepo = publicationRepository.findByUuid(uuid);
-        if (publicationFromRepo == null
-                || publicationFromRepo.getDeleted()) {
-            throw new DataNotFoundException("This publication has been deleted or has not been created yet.");
-        }
+        checkAccessible(publicationFromRepo);
         Publication publication = PublicationMapper.map(publicationDTO);
         publication.setId(publicationFromRepo.getId());
         publication.setUuid(uuid);
@@ -68,11 +65,18 @@ public class PublicationServiceImpl implements PublicationService {
     @Override
     public PublicationDTO delete(UUID uuid) throws DataNotFoundException {
         Publication publication = publicationRepository.findByUuid(uuid);
+        checkAccessible(publication);
+        publication.setDeleted(Boolean.TRUE);
+        return PublicationMapper.map(publicationRepository.save(publication));
+    }
+
+    private static void checkAccessible(Publication publication) {
         if (publication == null
                 || publication.getDeleted()) {
             throw new DataNotFoundException("This publication has been deleted or has not been created yet.");
         }
-        publication.setDeleted(Boolean.TRUE);
-        return PublicationMapper.map(publicationRepository.save(publication));
+        if (publication.getAuthorUuid() != JobFinderUtils.getPrincipalIdentifier()) {
+            throw new PermissionDeniedException("You are not the author of this publication.");
+        }
     }
 }

@@ -11,6 +11,7 @@ import ru.mityushin.jobfinder.server.repo.PersonRepository;
 import ru.mityushin.jobfinder.server.util.JobFinderUtils;
 import ru.mityushin.jobfinder.server.util.dto.OrganizationDTO;
 import ru.mityushin.jobfinder.server.util.dto.PersonDTO;
+import ru.mityushin.jobfinder.server.util.exception.PermissionDeniedException;
 import ru.mityushin.jobfinder.server.util.exception.data.DataAlreadyExistsException;
 import ru.mityushin.jobfinder.server.util.exception.data.DataNotFoundException;
 import ru.mityushin.jobfinder.server.util.exception.data.MissingRequiredParametersException;
@@ -68,6 +69,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         if (isInaccessible(organizationFromRepo)) {
             throw new DataNotFoundException("This organization has been deleted or has not been created yet.");
         }
+        checkPermission(organizationFromRepo);
         Organization prepared = mergeOrganizationDto(organizationFromRepo, organizationDTO);
         return OrganizationMapper.map(organizationRepository.save(prepared));
     }
@@ -78,6 +80,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         if (isInaccessible(organization)) {
             throw new DataNotFoundException("This organization has been deleted or has not been created yet.");
         }
+        checkPermission(organization);
         organization.setDeleted(Boolean.TRUE);
         return OrganizationMapper.map(organizationRepository.save(organization));
     }
@@ -120,6 +123,12 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     private Person getCurrentPerson() {
         return personRepository.findByUuid(JobFinderUtils.getPrincipalIdentifier());
+    }
+
+    private static void checkPermission(Organization organization) {
+        if (organization.getCreatorUuid() != JobFinderUtils.getPrincipalIdentifier()) {
+            throw new PermissionDeniedException("You are not the creator of this organization.");
+        }
     }
 
     private static boolean isInaccessible(@Nullable Organization organization) {
