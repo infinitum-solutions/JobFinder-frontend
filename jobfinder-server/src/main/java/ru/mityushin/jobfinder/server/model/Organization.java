@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Data
+@ToString(exclude = "subscribers")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
