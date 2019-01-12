@@ -1,6 +1,6 @@
-package ru.mityushin.jobfinder.server.util.aspect;
+package ru.mityushin.jobfinder.server.aspect;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -12,9 +12,9 @@ import java.util.Arrays;
 
 @Aspect
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class LoggingAspect {
-    private Logger log;
+    private final Logger log;
 
     @Pointcut("execution(* ru.mityushin.jobfinder.server.controller.*.*(..))")
     public void controllerMethods() {}

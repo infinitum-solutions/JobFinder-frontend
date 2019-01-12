@@ -34,6 +34,12 @@ public class Person {
     @ManyToMany(mappedBy = "subscribers")
     private Set<Organization> organizations;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "PERSON_ROLE",
+            joinColumns = @JoinColumn(name = "person_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private Set<Role> roles;
+
     @Column(name = "DELETED", nullable = false)
     private Boolean deleted;
 

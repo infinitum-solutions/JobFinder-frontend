@@ -1,7 +1,7 @@
 package ru.mityushin.jobfinder.server.util.mapper;
 
 import ru.mityushin.jobfinder.server.model.Publication;
-import ru.mityushin.jobfinder.server.util.dto.PublicationDTO;
+import ru.mityushin.jobfinder.server.dto.PublicationDTO;
 
 import javax.validation.constraints.NotNull;
 

@@ -1,6 +1,6 @@
 package ru.mityushin.jobfinder.server.service.organization;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -9,8 +9,8 @@ import ru.mityushin.jobfinder.server.model.Person;
 import ru.mityushin.jobfinder.server.repo.OrganizationRepository;
 import ru.mityushin.jobfinder.server.repo.PersonRepository;
 import ru.mityushin.jobfinder.server.util.JobFinderUtils;
-import ru.mityushin.jobfinder.server.util.dto.OrganizationDTO;
-import ru.mityushin.jobfinder.server.util.dto.PersonDTO;
+import ru.mityushin.jobfinder.server.dto.OrganizationDTO;
+import ru.mityushin.jobfinder.server.dto.PersonDTO;
 import ru.mityushin.jobfinder.server.util.exception.PermissionDeniedException;
 import ru.mityushin.jobfinder.server.util.exception.data.DataAlreadyExistsException;
 import ru.mityushin.jobfinder.server.util.exception.data.DataNotFoundException;
@@ -19,21 +19,20 @@ import ru.mityushin.jobfinder.server.util.mapper.OrganizationMapper;
 import ru.mityushin.jobfinder.server.util.mapper.PersonMapper;
 
 import javax.validation.constraints.NotNull;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class OrganizationServiceImpl implements OrganizationService {
-    private OrganizationRepository organizationRepository;
-    private PersonRepository personRepository;
-    private Logger log;
+    private final OrganizationRepository organizationRepository;
+    private final PersonRepository personRepository;
+    private final Logger log;
 
     @Override
-    public List<OrganizationDTO> findAll() {
+    public Collection<OrganizationDTO> findAll() {
         return organizationRepository.findAll().stream()
                 .filter((Organization o) -> !o.getDeleted())
                 .map(OrganizationMapper::map)
@@ -86,11 +85,11 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public Set<PersonDTO> getSubscribers(UUID uuid) {
+    public Collection<PersonDTO> getSubscribers(UUID uuid) {
         Organization organization = organizationRepository.findByUuid(uuid);
         return organization.getSubscribers().stream()
                 .map(PersonMapper::map)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
     @Override

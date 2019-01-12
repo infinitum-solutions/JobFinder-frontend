@@ -1,4 +1,4 @@
-package ru.mityushin.jobfinder.server.util.dto;
+package ru.mityushin.jobfinder.server.dto;
 
 import lombok.Builder;
 import lombok.Getter;

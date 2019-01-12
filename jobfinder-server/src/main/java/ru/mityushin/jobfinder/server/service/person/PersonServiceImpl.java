@@ -1,31 +1,39 @@
 package ru.mityushin.jobfinder.server.service.person;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.mityushin.jobfinder.server.model.Person;
+import ru.mityushin.jobfinder.server.model.Role;
 import ru.mityushin.jobfinder.server.repo.PersonRepository;
-import ru.mityushin.jobfinder.server.util.dto.PersonDTO;
+import ru.mityushin.jobfinder.server.repo.RoleRepository;
+import ru.mityushin.jobfinder.server.service.role.RoleService;
+import ru.mityushin.jobfinder.server.dto.PersonDTO;
+import ru.mityushin.jobfinder.server.util.exception.PermissionDeniedException;
 import ru.mityushin.jobfinder.server.util.exception.data.DataAlreadyExistsException;
 import ru.mityushin.jobfinder.server.util.exception.data.DataNotFoundException;
 import ru.mityushin.jobfinder.server.util.exception.data.MissingRequiredParametersException;
 import ru.mityushin.jobfinder.server.util.mapper.PersonMapper;
 
+import javax.transaction.Transactional;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PersonServiceImpl implements PersonService {
 
-    private PersonRepository personRepository;
-    private PasswordEncoder encoder;
+    private final PersonRepository personRepository;
+    private final RoleRepository roleRepository;
+    private final RoleService roleService;
+    private final PasswordEncoder encoder;
 
     @Override
-    public List<PersonDTO> findAll() {
+    public Collection<PersonDTO> findAll() {
         return personRepository.findAll().stream()
                 .filter(o -> !o.getDeleted())
                 .map(PersonMapper::map)
@@ -42,8 +50,19 @@ public class PersonServiceImpl implements PersonService {
         return PersonMapper.map(person);
     }
 
+    @Transactional
     @Override
-    public PersonDTO create(PersonDTO personDTO) {
+    public PersonDTO createAdmin(PersonDTO personDTO) {
+        return createWithRoles(personDTO, roleService.getAdminRoles());
+    }
+
+    @Transactional
+    @Override
+    public PersonDTO createUser(PersonDTO personDTO) {
+        return createWithRoles(personDTO, roleService.getUserRoles());
+    }
+
+    private PersonDTO createWithRoles(PersonDTO personDTO, Set<Role> roles) {
         if (personDTO.getUsername() == null) {
             throw new MissingRequiredParametersException("Required parameter 'username' doesn't specified.");
         }
@@ -57,6 +76,7 @@ public class PersonServiceImpl implements PersonService {
         person.setUuid(UUID.randomUUID());
         person.setPassword(encoder.encode(personDTO.getPassword()));
         person.setOrganizations(new HashSet<>());
+        person.setRoles(roles);
         person.setDeleted(Boolean.FALSE);
         person.setLocked(Boolean.FALSE);
         person.setEnabled(Boolean.TRUE);
@@ -65,17 +85,23 @@ public class PersonServiceImpl implements PersonService {
         return PersonMapper.map(saved);
     }
 
+    @Transactional
     @Override
     public PersonDTO update(UUID uuid, PersonDTO personDTO) {
         Person personFromRepo = personRepository.findByUuid(uuid);
         if (isInaccessible(personFromRepo)) {
             throw new DataNotFoundException("This profile has been deleted or has not been created yet.");
         }
+        if (personDTO.getOldPassword() != null
+                && !encoder.encode(personDTO.getOldPassword()).equals(personFromRepo.getPassword())) {
+            throw new PermissionDeniedException("Old password is invalid");
+        }
         Person prepared = mergePersonDtoAndEncodePassword(personFromRepo, personDTO, encoder);
         Person saved = personRepository.save(prepared);
         return PersonMapper.map(saved);
     }
 
+    @Transactional
     @Override
     public PersonDTO delete(UUID uuid) {
         Person person = personRepository.findByUuid(uuid);
@@ -83,6 +109,43 @@ public class PersonServiceImpl implements PersonService {
             throw new DataNotFoundException("This profile has been deleted or has not been created yet.");
         }
         person.setDeleted(Boolean.TRUE);
+        return PersonMapper.map(personRepository.save(person));
+    }
+
+    @Transactional
+    @Override
+    public PersonDTO addRoleToPerson(UUID uuid, PersonDTO personDTO) {
+        Person person = personRepository.findByUuid(uuid);
+        if (person == null) {
+            throw new DataNotFoundException("This profile has been deleted or has not been created yet.");
+        }
+        for (String role : personDTO.getRoles()) {
+            Role roleFromRepo = roleRepository.findByName(role);
+            if (roleFromRepo == null) {
+                throw new DataNotFoundException("Role " + role + " has been deleted or has not been created yet.");
+            }
+            boolean added = person.getRoles().add(roleFromRepo);
+            if (!added) {
+                throw new DataAlreadyExistsException("This person already has role " + role);
+            }
+        }
+        return PersonMapper.map(personRepository.save(person));
+    }
+
+    @Override
+    public PersonDTO deleteRoleFromPerson(UUID uuid, String role) {
+        Person person = personRepository.findByUuid(uuid);
+        if (person == null) {
+            throw new DataNotFoundException("This profile has been deleted or has not been created yet.");
+        }
+        Role roleFromRepo = roleRepository.findByName(role);
+        if (roleFromRepo == null) {
+            throw new DataNotFoundException("Role " + role + " has been deleted or has not been created yet.");
+        }
+        boolean removed = person.getRoles().remove(roleFromRepo);
+        if (!removed) {
+            throw new DataAlreadyExistsException("This person hasn't role " + role + " yet.");
+        }
         return PersonMapper.map(personRepository.save(person));
     }
 

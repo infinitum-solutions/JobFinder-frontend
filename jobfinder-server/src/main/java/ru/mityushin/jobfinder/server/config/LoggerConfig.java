@@ -1,4 +1,4 @@
-package ru.mityushin.jobfinder.server.util.config;
+package ru.mityushin.jobfinder.server.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

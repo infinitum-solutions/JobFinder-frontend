@@ -1,23 +1,28 @@
 package ru.mityushin.jobfinder.server.service.userdetails;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.mityushin.jobfinder.server.model.Person;
+import ru.mityushin.jobfinder.server.model.Role;
 
 import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ExtendedUserDetails implements UserDetails, Identifiable<UUID> {
 
-    private Person person;
+    private final Person person;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        //todo: fix it
-        return null;
+        return person.getRoles().stream()
+                .map(Role::getName)
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toSet());
     }
 
     @Override

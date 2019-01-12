@@ -1,4 +1,4 @@
-package ru.mityushin.jobfinder.server.util.config;
+package ru.mityushin.jobfinder.server.config;
 
 import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;

@@ -1,4 +1,4 @@
-package ru.mityushin.jobfinder.server.util.config;
+package ru.mityushin.jobfinder.server.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;

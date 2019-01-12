@@ -1,7 +1,7 @@
 package ru.mityushin.jobfinder.server.util.mapper;
 
 import ru.mityushin.jobfinder.server.model.Organization;
-import ru.mityushin.jobfinder.server.util.dto.OrganizationDTO;
+import ru.mityushin.jobfinder.server.dto.OrganizationDTO;
 
 import javax.validation.constraints.NotNull;
 

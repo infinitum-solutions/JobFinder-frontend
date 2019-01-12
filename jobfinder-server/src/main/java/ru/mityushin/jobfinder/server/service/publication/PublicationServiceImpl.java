@@ -1,27 +1,27 @@
 package ru.mityushin.jobfinder.server.service.publication;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.mityushin.jobfinder.server.model.Publication;
 import ru.mityushin.jobfinder.server.repo.PublicationRepository;
 import ru.mityushin.jobfinder.server.util.JobFinderUtils;
-import ru.mityushin.jobfinder.server.util.dto.PublicationDTO;
+import ru.mityushin.jobfinder.server.dto.PublicationDTO;
 import ru.mityushin.jobfinder.server.util.exception.PermissionDeniedException;
 import ru.mityushin.jobfinder.server.util.exception.data.DataNotFoundException;
 import ru.mityushin.jobfinder.server.util.mapper.PublicationMapper;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PublicationServiceImpl implements PublicationService {
 
-    private PublicationRepository publicationRepository;
+    private final PublicationRepository publicationRepository;
 
     @Override
-    public List<PublicationDTO> findAll() {
+    public Collection<PublicationDTO> findAll() {
         return publicationRepository.findAll().stream()
                 .filter((Publication p) -> !p.getDeleted())
                 .map(PublicationMapper::map)
