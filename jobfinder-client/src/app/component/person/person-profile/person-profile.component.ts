@@ -12,21 +12,20 @@ import {PersonService} from "../../../service/person.service";
 export class PersonProfileComponent implements OnInit {
 
   person: Person;
-  link: string;
+  private personUuid: string;
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private personService: PersonService) {
+  constructor(private router: Router,
+              private route: ActivatedRoute,
+              private personService: PersonService) {
   }
 
   ngOnInit() {
-    this.link = this.route.snapshot.paramMap.get('link');
-    this.personService.getPerson(this.link).subscribe(
+    this.personUuid = this.route.snapshot.paramMap.get('uuid');
+    this.personService.getPerson(this.personUuid).subscribe(
       (data) => this.person = data,
       (error) => {
-        this.router.navigate(['/404']);
-        console.error("ЗАЕБАЛ")
+        this.router.navigateByUrl('');
+        console.error(error)
       }
     )
   }

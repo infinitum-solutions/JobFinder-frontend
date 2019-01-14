@@ -2,12 +2,11 @@ import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {Organization} from "../model/organization";
-import {environment} from "../../environments/environment";
 
 @Injectable()
 export class OrganizationService {
 
-  private URL: string = environment.apiURL + '/api/organization/';
+  private URL: string = '/api/organizations/';
 
   constructor(private http: HttpClient) {
   }
@@ -26,5 +25,9 @@ export class OrganizationService {
 
   getOrganizations(): Observable<Organization[]> {
     return this.http.get<Organization[]>(this.URL);
+  }
+
+  getOrganization(organizationUuid: string): Observable<Organization> {
+    return this.http.get<Organization>(this.URL + organizationUuid);
   }
 }

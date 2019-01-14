@@ -1,12 +1,9 @@
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Injectable} from "@angular/core";
-import {environment} from "../../environments/environment";
+import {Observable} from "rxjs";
 
 @Injectable()
 export class AuthService {
-
-  private loginURL: string = environment.apiURL + '/login';
-  private logoutURL: string = environment.apiURL + '/logout';
 
   authenticated: boolean = false;
 
@@ -15,21 +12,12 @@ export class AuthService {
   ) {
   }
 
-  authenticate(credentials, callback) {
-
-    const headers = new HttpHeaders(credentials ? {
-      authorization : 'Basic ' + btoa(credentials.username + ':' + credentials.password)
-    } : {});
-
-    this.http.post(this.loginURL, {headers: headers}).subscribe(response => {
-      this.authenticated = !!response['name'];
-      return callback && callback();
-    });
-
+  authenticate(credentials): Observable<boolean> {
+    return this.http.post<boolean>('/login', credentials);
   }
 
   logout(callback) {
-    this.http.post(this.logoutURL, {}).subscribe(
+    this.http.post('/logout', {}).subscribe(
       () => {
         this.authenticated = false;
         return callback && callback();

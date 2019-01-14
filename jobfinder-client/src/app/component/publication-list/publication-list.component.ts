@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {Publication} from "../../../model/publication";
-import {PublicationService} from "../../../service/publication.service";
 import {Router} from "@angular/router";
+import {PublicationService} from "../../service/publication.service";
+import {Publication} from "../../model/publication";
 
 @Component({
   selector: 'app-publication-list',
@@ -13,10 +13,8 @@ export class PublicationListComponent implements OnInit {
 
   publications: Publication[];
 
-  constructor(
-    private publicationService: PublicationService,
-    private router: Router
-  ) {
+  constructor(private publicationService: PublicationService,
+              private router: Router) {
   }
 
   ngOnInit() {
@@ -27,7 +25,11 @@ export class PublicationListComponent implements OnInit {
   }
 
   createPublication() {
-    this.router.navigate(['/publications/create']);
+    this.router.navigateByUrl('/publications/create');
+  }
+
+  openPublication(publication: Publication) {
+    this.router.navigateByUrl('/publications/' + publication.uuid)
   }
 
 }

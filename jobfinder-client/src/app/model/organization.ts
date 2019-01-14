@@ -1,10 +1,7 @@
-import {Person} from "./person";
-
 export interface Organization {
-  id: number;
-  link: string;
+  uuid: string;
+  creatorUuid: string;
   title: string;
-  owner: Person;
-  members: Person[];
-  subscribers: Person[];
+  description: string;
+  subscribersCount: number;
 }

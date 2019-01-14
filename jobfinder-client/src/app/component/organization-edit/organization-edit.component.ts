@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {Organization} from "../../../model/organization";
+import {Component, OnInit} from '@angular/core';
+import {Organization} from "../../model/organization";
 
 @Component({
   selector: 'app-organization-edit',
@@ -12,7 +12,8 @@ export class OrganizationEditComponent implements OnInit {
 
   submitted = false;
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
   }

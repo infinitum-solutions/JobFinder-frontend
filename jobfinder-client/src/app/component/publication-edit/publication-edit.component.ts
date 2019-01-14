@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {Publication} from "../../../model/publication";
-import {PublicationService} from "../../../service/publication.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormControl} from "@angular/forms";
+import {PublicationService} from "../../service/publication.service";
+import {Publication} from "../../model/publication";
 
 @Component({
   selector: 'app-publication-edit',
