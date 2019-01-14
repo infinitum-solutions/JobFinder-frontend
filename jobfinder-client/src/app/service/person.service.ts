@@ -2,12 +2,11 @@ import {Observable} from "rxjs";
 import {Person} from "../model/person";
 import {HttpClient} from "@angular/common/http";
 import {Injectable} from "@angular/core";
-import {environment} from "../../environments/environment";
 
 @Injectable()
 export class PersonService {
 
-  private URL: string = environment.apiURL + '/api/person/';
+  private URL: string = '/api/persons/';
 
   constructor(private http: HttpClient) {
   }

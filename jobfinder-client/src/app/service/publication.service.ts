@@ -2,12 +2,11 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Publication} from "../model/publication";
 import {Injectable} from "@angular/core";
-import {environment} from "../../environments/environment";
 
 @Injectable()
 export class PublicationService {
 
-  private URL: string = environment.apiURL + '/api/publication/';
+  private URL: string = '/api/publications/';
 
   constructor(private http: HttpClient) {
   }

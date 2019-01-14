@@ -1,14 +1,19 @@
-import {Person} from "./person";
-
 export class Publication {
-  author: Person;
-  link: string;
+  uuid: string;
+  authorUuid: string;
   title: string;
   description: string;
   content: string;
   visible: boolean;
 
-  constructor(title: string, description: string, content: string, visible: boolean) {
+  constructor(uuid: string,
+              authorUuid: string,
+              title: string,
+              description: string,
+              content: string,
+              visible: boolean) {
+    this.uuid = uuid;
+    this.authorUuid = authorUuid;
     this.title = title;
     this.description = description;
     this.content = content;

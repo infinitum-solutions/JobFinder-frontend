@@ -1,6 +1,7 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Person} from "../../../model/person";
 import {PersonService} from "../../../service/person.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-person-list',
@@ -11,9 +12,9 @@ import {PersonService} from "../../../service/person.service";
 export class PersonListComponent implements OnInit {
 
   persons: Person[];
-  selectedPerson: Person;
 
-  constructor(private personService: PersonService) {
+  constructor(private personService: PersonService,
+              private router: Router) {
   }
 
   ngOnInit() {
@@ -23,8 +24,7 @@ export class PersonListComponent implements OnInit {
     )
   }
 
-  onSelect(person: Person): void {
-    this.selectedPerson = person;
+  openProfile(person: Person) {
+    this.router.navigateByUrl('/persons/' + person.uuid)
   }
-
 }
