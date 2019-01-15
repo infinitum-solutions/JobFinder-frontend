@@ -13,6 +13,10 @@ public class PersonMapper {
                 .uuid(personDTO.getUuid())
                 .username(personDTO.getUsername())
                 .password(personDTO.getPassword())
+                .firstName(personDTO.getFirstName())
+                .lastName(personDTO.getLastName())
+                .sex(personDTO.getSex())
+                .country(personDTO.getCountry())
                 .build();
     }
 
@@ -22,6 +26,10 @@ public class PersonMapper {
                 .uuid(person.getUuid())
                 .username(person.getUsername())
                 .password(person.getPassword())
+                .firstName(person.getFirstName())
+                .lastName(person.getLastName())
+                .sex(person.getSex())
+                .country(person.getCountry())
                 .build();
     }
 }

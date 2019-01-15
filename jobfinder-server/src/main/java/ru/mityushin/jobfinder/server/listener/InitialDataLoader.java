@@ -54,6 +54,8 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
                     .uuid(uuid)
                     .username(username)
                     .password(encoder.encode("password"))
+                    .firstName(username)
+                    .lastName("Test")
                     .roles(roles)
                     .deleted(Boolean.FALSE)
                     .locked(Boolean.FALSE)

@@ -1,6 +1,7 @@
 package ru.mityushin.jobfinder.server.model;
 
 import lombok.*;
+import ru.mityushin.jobfinder.server.util.enums.Sex;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
@@ -30,6 +31,19 @@ public class Person {
 
     @Column(name = "PASSWORD", nullable = false)
     private String password;
+
+    @Column(name = "FIRST_NAME", nullable = false)
+    private String firstName;
+
+    @Column(name = "LAST_NAME", nullable = false)
+    private String lastName;
+
+    @Column(name = "SEX")
+    @Enumerated(EnumType.STRING)
+    private Sex sex;
+
+    @Column(name = "COUNTRY")
+    private String country;
 
     @ManyToMany(mappedBy = "subscribers")
     private Set<Organization> organizations;
