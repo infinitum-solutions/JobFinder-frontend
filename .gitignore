@@ -1,3 +1,7 @@
+# Keys archive
+*.p12
+
+# Idea files
 *.idea/*
 *.iml
 target/

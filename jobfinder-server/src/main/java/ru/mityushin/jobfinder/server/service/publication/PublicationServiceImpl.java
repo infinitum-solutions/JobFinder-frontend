@@ -1,29 +1,29 @@
 package ru.mityushin.jobfinder.server.service.publication;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.mityushin.jobfinder.server.model.Publication;
 import ru.mityushin.jobfinder.server.repo.PublicationRepository;
-import ru.mityushin.jobfinder.server.util.dto.PublicationDTO;
-import ru.mityushin.jobfinder.server.util.exception.data.AlreadyExistsDataException;
-import ru.mityushin.jobfinder.server.util.exception.data.NotFoundDataException;
-import ru.mityushin.jobfinder.server.util.exception.data.RequiredParametersDataException;
+import ru.mityushin.jobfinder.server.util.JobFinderUtils;
+import ru.mityushin.jobfinder.server.dto.PublicationDTO;
+import ru.mityushin.jobfinder.server.util.exception.PermissionDeniedException;
+import ru.mityushin.jobfinder.server.util.exception.data.DataNotFoundException;
 import ru.mityushin.jobfinder.server.util.mapper.PublicationMapper;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PublicationServiceImpl implements PublicationService {
 
-    private PublicationRepository publicationRepository;
+    private final PublicationRepository publicationRepository;
 
     @Override
-    public List<PublicationDTO> findAll() {
+    public Collection<PublicationDTO> findAll() {
         return publicationRepository.findAll().stream()
-                .filter(o -> !o.getDeleted())
+                .filter((Publication p) -> !p.getDeleted())
                 .map(PublicationMapper::map)
                 .collect(Collectors.toList());
     }
@@ -33,44 +33,50 @@ public class PublicationServiceImpl implements PublicationService {
         Publication publication = publicationRepository.findByUuid(uuid);
         if (publication == null
                 || publication.getDeleted()) {
-            throw new NotFoundDataException();
+            throw new DataNotFoundException("This publication has been deleted or has not been created yet.");
         }
         return PublicationMapper.map(publication);
     }
 
     @Override
-    public PublicationDTO create(PublicationDTO publicationDTO) throws AlreadyExistsDataException, RequiredParametersDataException {
+    public PublicationDTO create(PublicationDTO publicationDTO) {
         Publication publication = PublicationMapper.map(publicationDTO);
         publication.setUuid(UUID.randomUUID());
-        Publication saved = publicationRepository.save(publication);
-        return PublicationMapper.map(saved);
+        publication.setAuthorUuid(JobFinderUtils.getPrincipalIdentifier());
+        publication.setVisible(Boolean.TRUE);
+        publication.setDeleted(Boolean.FALSE);
+        return PublicationMapper.map(publicationRepository.save(publication));
     }
 
     @Override
-    public PublicationDTO update(UUID uuid, PublicationDTO publicationDTO) throws NotFoundDataException, RequiredParametersDataException {
-
+    public PublicationDTO update(UUID uuid, PublicationDTO publicationDTO) {
         Publication publicationFromRepo = publicationRepository.findByUuid(uuid);
-        if (publicationFromRepo == null
-                || publicationFromRepo.getDeleted()) {
-            throw new NotFoundDataException();
-        }
+        checkAccessible(publicationFromRepo);
         Publication publication = PublicationMapper.map(publicationDTO);
         publication.setId(publicationFromRepo.getId());
         publication.setUuid(uuid);
-        publication.setDeleted(false);
+        publication.setAuthorUuid(publicationFromRepo.getAuthorUuid());
+        publication.setDeleted(Boolean.FALSE);
 
         Publication saved = publicationRepository.save(publication);
         return PublicationMapper.map(saved);
     }
 
     @Override
-    public PublicationDTO delete(UUID uuid) throws NotFoundDataException {
+    public PublicationDTO delete(UUID uuid) throws DataNotFoundException {
         Publication publication = publicationRepository.findByUuid(uuid);
+        checkAccessible(publication);
+        publication.setDeleted(Boolean.TRUE);
+        return PublicationMapper.map(publicationRepository.save(publication));
+    }
+
+    private static void checkAccessible(Publication publication) {
         if (publication == null
                 || publication.getDeleted()) {
-            throw new NotFoundDataException();
+            throw new DataNotFoundException("This publication has been deleted or has not been created yet.");
         }
-        publication.setDeleted(true);
-        return PublicationMapper.map(publicationRepository.save(publication));
+        if (publication.getAuthorUuid() != JobFinderUtils.getPrincipalIdentifier()) {
+            throw new PermissionDeniedException("You are not the author of this publication.");
+        }
     }
 }

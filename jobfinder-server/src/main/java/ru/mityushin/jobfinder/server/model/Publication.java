@@ -20,6 +20,9 @@ public class Publication {
     @Column(name = "UUID", nullable = false, unique = true)
     private UUID uuid;
 
+    @Column(name = "AUTHOR_UUID", nullable = false)
+    private UUID authorUuid;
+
     @Column(name = "TITLE", length = 50, nullable = false)
     private String title;
 

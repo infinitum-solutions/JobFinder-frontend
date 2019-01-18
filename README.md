@@ -10,7 +10,11 @@ mvn clean package
 java -jar jobfinder-server/target/server-1.0.0.jar
 
 #### Клиент в браузере:
-http://localhost:8090
+http://localhost:8090/
+
+https://localhost:8443/
 
 #### API в браузере:
 http://localhost:8090/api/
+
+https://localhost:8443/api/

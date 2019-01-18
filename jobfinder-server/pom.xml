@@ -77,15 +77,16 @@
                 <executions>
                     <execution>
                         <id>copy-resources</id>
-                        <phase>process-resources</phase>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>target/classes/static</outputDirectory>
+                            <outputDirectory>${project.build.directory}/classes/static</outputDirectory>
+                            <overwrite>true</overwrite>
                             <resources>
                                 <resource>
-                                    <directory>../predictor-client/dist/predictor-client</directory>
+                                    <directory>../jobfinder-client/dist/jobfinder-client</directory>
                                     <filtering>true</filtering>
                                 </resource>
                             </resources>

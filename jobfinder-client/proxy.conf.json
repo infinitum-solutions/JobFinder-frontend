@@ -1,0 +1,32 @@
+{
+  "/login": {
+    "target": {
+      "host": "localhost",
+      "protocol": "https:",
+      "port": 8443
+    },
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/logout": {
+    "target": {
+      "host": "localhost",
+      "protocol": "https:",
+      "port": 8443
+    },
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/api/*": {
+    "target": {
+      "host": "localhost",
+      "protocol": "https:",
+      "port": 8443
+    },
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  }
+}
