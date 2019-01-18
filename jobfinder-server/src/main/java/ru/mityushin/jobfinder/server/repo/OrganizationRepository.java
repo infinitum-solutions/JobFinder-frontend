@@ -10,5 +10,6 @@ import java.util.UUID;
 @Repository
 public interface OrganizationRepository extends CrudRepository<Organization, Long> {
     Collection<Organization> findAll();
+    Collection<Organization> findAllByCreatorUuid(UUID creatorUuid);
     Organization findByUuid(UUID uuid);
 }

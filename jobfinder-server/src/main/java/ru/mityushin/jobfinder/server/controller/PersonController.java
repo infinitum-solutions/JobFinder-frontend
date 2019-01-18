@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+import ru.mityushin.jobfinder.server.dto.PublicationDTO;
 import ru.mityushin.jobfinder.server.service.person.PersonService;
 import ru.mityushin.jobfinder.server.dto.PersonDTO;
 
@@ -59,6 +60,13 @@ public class PersonController {
     @ResponseBody
     public ResponseEntity<PersonDTO> deletePerson(@PathVariable(value = "uuid") UUID uuid) {
         return new ResponseEntity<>(personService.delete(uuid), HttpStatus.OK);
+    }
+
+    @Secured({"ROLE_USER"})
+    @GetMapping(value = "/{uuid}/publications")
+    @ResponseBody
+    public ResponseEntity<Collection<PublicationDTO>> getPersonPublications(@PathVariable(value = "uuid") UUID uuid) {
+        return new ResponseEntity<>(personService.findPersonPublications(uuid), HttpStatus.OK);
     }
 
     @Secured({"ROLE_ADMIN"})

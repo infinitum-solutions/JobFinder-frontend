@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Person} from "../../../model/person";
 import {ActivatedRoute, Router} from "@angular/router";
 import {PersonService} from "../../../service/person.service";
+import {Publication} from "../../../model/publication";
 
 @Component({
   selector: 'app-person-profile',
@@ -12,6 +13,8 @@ import {PersonService} from "../../../service/person.service";
 export class PersonProfileComponent implements OnInit {
 
   person: Person;
+  publications: Publication[];
+  hasPublications: boolean;
   private personUuid: string;
 
   constructor(private router: Router,
@@ -27,6 +30,17 @@ export class PersonProfileComponent implements OnInit {
         this.router.navigateByUrl('');
         console.error(error)
       }
+    );
+    this.personService.getPersonPublications(this.personUuid).subscribe(
+      (arr) => {
+        if (arr.length == 0) {
+          this.hasPublications = false;
+        } else {
+          this.publications = arr;
+          this.hasPublications = true;
+        }
+      },
+      (error) => alert(error)
     )
   }
 

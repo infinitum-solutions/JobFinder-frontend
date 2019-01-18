@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Publication} from "../../model/publication";
 import {PublicationService} from "../../service/publication.service";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -11,8 +11,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 })
 export class PublicationComponent implements OnInit {
 
-  publication: Publication;
-  private publicationUuid: string;
+  @Input() publication: Publication;
 
   constructor(private router: Router,
               private route: ActivatedRoute,
@@ -20,14 +19,16 @@ export class PublicationComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.publicationUuid = this.route.snapshot.paramMap.get('uuid');
-    this.publicationService.getPublication(this.publicationUuid).subscribe(
-      (publication) => this.publication = publication,
-      (error) => {
-        this.router.navigateByUrl('');
-        console.error(error)
-      }
-    )
+    if (this.publication == null) {
+      let publicationUuid = this.route.snapshot.paramMap.get('publicationUuid');
+      this.publicationService.getPublication(publicationUuid).subscribe(
+        (publication) => this.publication = publication,
+        (error) => {
+          this.router.navigateByUrl('');
+          console.error(error)
+        }
+      )
+    }
   }
 
 }

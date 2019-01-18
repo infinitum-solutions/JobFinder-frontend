@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.mityushin.jobfinder.server.dto.PublicationDTO;
 import ru.mityushin.jobfinder.server.model.Person;
 import ru.mityushin.jobfinder.server.model.Role;
 import ru.mityushin.jobfinder.server.repo.PersonRepository;
+import ru.mityushin.jobfinder.server.repo.PublicationRepository;
 import ru.mityushin.jobfinder.server.repo.RoleRepository;
 import ru.mityushin.jobfinder.server.service.role.RoleService;
 import ru.mityushin.jobfinder.server.dto.PersonDTO;
@@ -15,6 +17,7 @@ import ru.mityushin.jobfinder.server.util.exception.data.DataAlreadyExistsExcept
 import ru.mityushin.jobfinder.server.util.exception.data.DataNotFoundException;
 import ru.mityushin.jobfinder.server.util.exception.data.MissingRequiredParametersException;
 import ru.mityushin.jobfinder.server.util.mapper.PersonMapper;
+import ru.mityushin.jobfinder.server.util.mapper.PublicationMapper;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
@@ -28,6 +31,7 @@ import java.util.stream.Collectors;
 public class PersonServiceImpl implements PersonService {
 
     private final PersonRepository personRepository;
+    private final PublicationRepository publicationRepository;
     private final RoleRepository roleRepository;
     private final RoleService roleService;
     private final PasswordEncoder encoder;
@@ -147,6 +151,13 @@ public class PersonServiceImpl implements PersonService {
             throw new DataAlreadyExistsException("This person hasn't role " + role + " yet.");
         }
         return PersonMapper.map(personRepository.save(person));
+    }
+
+    @Override
+    public Collection<PublicationDTO> findPersonPublications(UUID uuid) {
+        return publicationRepository.findAllByAuthorUuid(uuid).stream()
+                .map(PublicationMapper::map)
+                .collect(Collectors.toList());
     }
 
     private static boolean isInaccessible(@Nullable Person person) {

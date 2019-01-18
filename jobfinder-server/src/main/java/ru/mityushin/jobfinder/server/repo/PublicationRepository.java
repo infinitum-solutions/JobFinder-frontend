@@ -10,5 +10,6 @@ import java.util.UUID;
 @Repository
 public interface PublicationRepository extends CrudRepository<Publication, Long> {
     Collection<Publication> findAll();
+    Collection<Publication> findAllByAuthorUuid(UUID authorUuid);
     Publication findByUuid(UUID uuid);
 }
