@@ -19,7 +19,7 @@ export class OrganizationProfileComponent implements OnInit {
               private organizationService: OrganizationService) { }
 
   ngOnInit() {
-    this.organizationUuid = this.route.snapshot.paramMap.get('uuid');
+    this.organizationUuid = this.route.snapshot.paramMap.get('organizationUuid');
     this.organizationService.getOrganization(this.organizationUuid).subscribe(
       (organization) => this.organization = organization,
       (error) => {

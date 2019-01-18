@@ -29,7 +29,6 @@ export class OrganizationListComponent implements OnInit {
   }
 
   openOrganization(organization: Organization) {
-    alert(organization.uuid);
     this.router.navigateByUrl('/organizations/' + organization.uuid)
   }
 }

@@ -18,7 +18,7 @@ const appRoutes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'organizations', component: OrganizationListComponent},
   {path: 'organizations/create', component: OrganizationCreateComponent, canActivate: [AuthGuard]},
-  {path: 'organizations/:publicationUuid', component: OrganizationProfileComponent},
+  {path: 'organizations/:organizationUuid', component: OrganizationProfileComponent},
   {path: 'publications', component: PublicationListComponent},
   {path: 'publications/create', component: PublicationCreateComponent, canActivate: [AuthGuard]},
   {path: 'publications/:publicationUuid', component: PublicationComponent},

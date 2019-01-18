@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Publication} from "../../_models/publication";
-import {PublicationService} from "../../_services/publication.service";
+import {Publication} from "../../_models";
+import {PublicationService} from "../../_services";
 import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
@@ -25,7 +25,6 @@ export class PublicationComponent implements OnInit {
         (publication) => this.publication = publication,
         (error) => {
           this.router.navigateByUrl('');
-          console.error(error)
         }
       )
     }
