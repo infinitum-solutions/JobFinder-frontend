@@ -2,7 +2,7 @@ import {Routes, RouterModule} from '@angular/router';
 import {ModuleWithProviders} from "@angular/core";
 import {PersonListComponent} from "./components/person-list/person-list.component";
 import {PersonProfileComponent} from "./components/person-profile/person-profile.component";
-import {WelcomeComponent} from "./components/welcome/welcome.component";
+import {HomePageComponent} from "./components/home-page/home-page.component";
 import {LoginComponent} from "./components/login/login.component";
 import {OrganizationListComponent} from "./components/organization-list/organization-list.component";
 import {PublicationListComponent} from "./components/publication-list/publication-list.component";
@@ -14,7 +14,7 @@ import {OrganizationProfileComponent} from "./components/organization-profile/or
 import {AuthGuard} from "./_guards";
 
 const appRoutes: Routes = [
-  {path: '', component: WelcomeComponent},
+  {path: '', component: HomePageComponent},
   {path: 'login', component: LoginComponent},
   {path: 'organizations', component: OrganizationListComponent},
   {path: 'organizations/create', component: OrganizationCreateComponent, canActivate: [AuthGuard]},

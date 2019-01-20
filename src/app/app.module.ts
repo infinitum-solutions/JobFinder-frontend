@@ -9,7 +9,7 @@ import {routing} from "./app.routing";
 import {PersonListComponent} from './components/person-list/person-list.component';
 import {PersonProfileComponent} from './components/person-profile/person-profile.component';
 import {PageNotFoundComponent} from './components/page-not-found/page-not-found.component';
-import {WelcomeComponent} from './components/welcome/welcome.component';
+import {HomePageComponent} from './components/home-page/home-page.component';
 import {LoginComponent} from './components/login/login.component';
 import {PersonEditComponent} from './components/person-edit/person-edit.component';
 import {OrganizationListComponent} from "./components/organization-list/organization-list.component";
@@ -35,7 +35,7 @@ import {BasicAuthInterceptor, ErrorInterceptor} from "./_helpers";
   ],
   declarations: [
     AppComponent,
-    WelcomeComponent,
+    HomePageComponent,
     OrganizationListComponent,
     PersonListComponent,
     PublicationListComponent,

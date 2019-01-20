@@ -5,6 +5,9 @@ import {map} from 'rxjs/operators';
 
 @Injectable({providedIn: 'root'})
 export class AuthenticationService {
+
+  static key: string = 'currentUser';
+
   constructor(private http: HttpClient) {
   }
 
@@ -20,15 +23,19 @@ export class AuthenticationService {
           // store user details and basic auth credentials in local storage
           // to keep user logged in between page refreshes
           user.authdata = window.btoa(username + ':' + password);
-          localStorage.setItem('currentUser', JSON.stringify(user));
+          localStorage.setItem(AuthenticationService.key, JSON.stringify(user));
         }
 
         return user;
       }));
   }
 
-  logout() {
+  static isAuthenticated(): boolean {
+    return localStorage.getItem(AuthenticationService.key) != null;
+  }
+
+  static logout() {
     // remove user from local storage to log user out
-    localStorage.removeItem('currentUser');
+    localStorage.removeItem(AuthenticationService.key);
   }
 }
