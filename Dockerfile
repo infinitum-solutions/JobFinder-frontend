@@ -1,5 +1,5 @@
 FROM nginx:alpine
-COPY nginx.conf /etc/nginx/nginx.conf2
+COPY nginx.conf /etc/nginx/nginx.conf
 
 WORKDIR /usr/share/nginx/html
 COPY dist/JobFinder-frontend .
